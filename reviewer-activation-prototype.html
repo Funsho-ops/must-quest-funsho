@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Reviewer activation prototype</title>
+<style>
+:root{--bg:#fafaf7;--card:#fff;--tx:#1c1c1a;--mut:#6b6b66;--bd:#dcdcd5;--ac:#1f5eff;--ok:#127a3e;--no:#b3261e;--wn:#8a5a00;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);color-scheme:light}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#141413;--card:#1d1d1b;--tx:#ecece6;--mut:#a0a09a;--bd:#34342f;--ac:#7aa2ff;--ok:#5fd08a;--no:#ff8f86;--wn:#e8b34a;color-scheme:dark}}
+:root[data-theme="dark"]{--bg:#141413;--card:#1d1d1b;--tx:#ecece6;--mut:#a0a09a;--bd:#34342f;--ac:#7aa2ff;--ok:#5fd08a;--no:#ff8f86;--wn:#e8b34a;color-scheme:dark}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+main{max-width:1040px;margin:0 auto;padding:16px}
+h1{font-size:22px;margin:0 0 4px}h2{font-size:15px;margin:0 0 10px}
+p.s{color:var(--mut);margin:0 0 14px}
+.g{display:grid;gap:14px;grid-template-columns:1fr}
+@media(min-width:860px){.g{grid-template-columns:1.1fr .9fr}}
+.c{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:14px;margin-bottom:14px}
+.ow{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px;white-space:nowrap}
+th,td{padding:5px 8px;border-bottom:1px solid var(--bd);text-align:left}
+th{color:var(--mut);font-weight:600}
+.y{color:var(--ok);font-weight:600}.n{color:var(--no)}.w{color:var(--wn)}
+.bar{height:20px;background:var(--bd);border-radius:4px;overflow:hidden;margin:2px 0 8px}
+.bar i{display:block;height:100%;background:var(--ac)}
+.row{display:flex;justify-content:space-between;gap:8px;font-size:13px}
+button{font:inherit;background:var(--card);color:var(--tx);border:1px solid var(--bd);border-radius:8px;padding:7px 10px;cursor:pointer;margin:0 6px 6px 0}
+button:hover{border-color:var(--ac)}
+label{display:inline-block;font-size:12px;color:var(--mut);margin:0 10px 8px 0}
+input{width:56px;font:inherit;background:var(--bg);color:var(--tx);border:1px solid var(--bd);border-radius:6px;padding:3px 5px}
+.big{font-size:26px;font-weight:700}
+.note{font-size:12px;color:var(--mut)}
+</style>
+</head>
+<body>
+<main>
+<h1>Reviewer activation prototype</h1>
+<p class="s">Synthetic participants only. No real users, rewards or mainnet transactions. Every threshold is an assumption you can change below, and every figure recalculates from the raw records.</p>
+
+<div class="c">
+<h2>1. Rules under test</h2>
+<label>Meaningful read (seconds)<input id="read" type="number" value="90"></label>
+<label>Min review words<input id="rev" type="number" value="40"></label>
+<label>Min question words<input id="qn" type="number" value="15"></label>
+<label>Duplicate at similarity %<input id="sim" type="number" value="80"></label>
+<label>Rubric pass (of 5)<input id="rub" type="number" value="3"></label>
+<div class="note">Scroll depth of 80% is fixed. A submission counts only after a meaningful read, because the submit button stays disabled until then.</div>
+</div>
+
+<div class="c">
+<h2>2. Add a participant</h2>
+<button data-s="normal">Connects wallet, acknowledges</button>
+<button data-s="decline">Declines wallet, asks a question</button>
+<button data-s="dup">Duplicate of P01</button>
+<button data-s="fail">Acknowledgement fails</button>
+<button data-s="reset">Reset to 12 records</button>
+</div>
+
+<div class="g">
+<div>
+<div class="c"><h2>3. Funnel (primary metric)</h2><div id="funnel"></div></div>
+<div class="c"><h2>4. Side metrics (never in the funnel)</h2><div id="side"></div></div>
+</div>
+<div class="c">
+<h2>Headline</h2>
+<div class="big" id="head"></div>
+<div class="note" id="headnote"></div>
+<hr style="border:0;border-top:1px solid var(--bd);margin:12px 0">
+<div class="row"><span>Credits awarded (non-cash)</span><b id="cred"></b></div>
+<div class="row"><span>Credits earned by acknowledgement</span><b>0</b></div>
+<div class="note" style="margin-top:8px">An acknowledgement is not proof of asset ownership, verified reserves or a guaranteed investment. It records that a wallet signed a statement about reading one disclosure version.</div>
+</div>
+</div>
+
+<div class="c ow">
+<h2>5. Labelled synthetic records and formulas</h2>
+<table id="t"></table>
+<div class="note" style="margin-top:8px">Qualified = submitted after a meaningful read AND section tag AND length (review at least the word minimum, or question at least the question minimum) AND adds something new AND similarity below the duplicate limit AND rubric at or above the pass mark. Credit = 10 if qualified, +5 if rubric is 5, +10 if follow-up accepted.</div>
+</div>
+</main>
+<script>
+const BASE=[
+{id:"P01",rs:140,sc:95,sub:1,tag:1,w:62,q:0,nv:1,sim:22,rb:4,wal:"connected",ack:"ok",fu:1},
+{id:"P02",rs:120,sc:90,sub:1,tag:1,w:48,q:0,nv:1,sim:30,rb:3,wal:"none",ack:"declined",fu:0},
+{id:"P03",rs:200,sc:100,sub:1,tag:1,w:18,q:1,nv:1,sim:15,rb:5,wal:"none",ack:"declined",fu:1},
+{id:"P04",rs:110,sc:85,sub:1,tag:1,w:55,q:0,nv:1,sim:91,rb:2,wal:"connected",ack:"ok",fu:0},
+{id:"P05",rs:100,sc:82,sub:1,tag:1,w:45,q:0,nv:1,sim:25,rb:3,wal:"connected",ack:"failed",fu:0},
+{id:"P06",rs:35,sc:40,sub:0,tag:0,w:0,q:0,nv:0,sim:0,rb:0,wal:"none",ack:"n/a",fu:0},
+{id:"P07",rs:95,sc:88,sub:0,tag:0,w:0,q:0,nv:0,sim:0,rb:0,wal:"none",ack:"n/a",fu:0},
+{id:"P08",rs:150,sc:92,sub:1,tag:0,w:30,q:0,nv:0,sim:40,rb:2,wal:"none",ack:"n/a",fu:0},
+{id:"P09",rs:0,sc:0,sub:0,tag:0,w:0,q:0,nv:0,sim:0,rb:0,wal:"none",ack:"n/a",fu:0},
+{id:"P10",rs:20,sc:30,sub:0,tag:0,w:0,q:0,nv:0,sim:0,rb:0,wal:"none",ack:"n/a",fu:0},
+{id:"P11",rs:130,sc:97,sub:1,tag:1,w:70,q:0,nv:1,sim:18,rb:5,wal:"connected",ack:"ok",fu:1},
+{id:"P12",rs:80,sc:60,sub:0,tag:0,w:0,q:0,nv:0,sim:0,rb:0,wal:"none",ack:"n/a",fu:0}];
+const SC={normal:{rs:130,sc:92,sub:1,tag:1,w:58,q:0,nv:1,sim:20,rb:4,wal:"connected",ack:"ok",fu:0},
+decline:{rs:115,sc:90,sub:1,tag:1,w:20,q:1,nv:1,sim:18,rb:4,wal:"none",ack:"declined",fu:0},
+dup:{rs:125,sc:94,sub:1,tag:1,w:60,q:0,nv:1,sim:91,rb:2,wal:"connected",ack:"ok",fu:0},
+fail:{rs:105,sc:88,sub:1,tag:1,w:52,q:0,nv:1,sim:24,rb:3,wal:"connected",ack:"failed",fu:0}};
+let rows=JSON.parse(JSON.stringify(BASE));
+const $=id=>document.getElementById(id),cfg=()=>({read:+$("read").value,rev:+$("rev").value,qn:+$("qn").value,sim:+$("sim").value,rub:+$("rub").value});
+function ev(r,c){const op=r.rs>0,rd=r.rs>=c.read&&r.sc>=80,sb=!!(r.sub&&rd);
+let why="",q=false;
+if(!sb)why="No submission";else if(!r.tag)why="No section tag";else if(!(r.w>=c.rev||(r.q&&r.w>=c.qn)))why="Too short";else if(!r.nv)why="Adds nothing new";else if(r.sim>=c.sim)why="Duplicate";else if(r.rb<c.rub)why="Rubric below pass";else q=true;
+const cr=q?10+(r.rb==5?5:0)+(r.fu?10:0):0;
+return{op,rd,sb,q,why,cr,st:!op?"Invited":!rd?"Opened":!sb?"Read":q?"Qualified":"Submitted"};}
+const pc=(a,b)=>b?(100*a/b).toFixed(1)+"%":"n/a";
+function render(){const c=cfg(),E=rows.map(r=>ev(r,c)),N=rows.length;
+const n=f=>E.filter(f).length,op=n(e=>e.op),rd=n(e=>e.rd),sb=n(e=>e.sb),q=n(e=>e.q);
+const fu=rows.filter((r,i)=>E[i].q&&r.fu).length;
+const st=[["Invited (S1)",N],["Disclosure opened (S2)",op],["Meaningful read (S3)",rd],["Review submitted (S4)",sb],["Qualified review (S5)",q],["Qualified follow-up (S6)",fu]];
+$("funnel").innerHTML=st.map((s,i)=>`<div class="row"><span>${s[0]}</span><b>${s[1]} (${pc(s[1],N)} of invited${i?`, ${pc(s[1],st[i-1][1])} of previous`:""})</b></div><div class="bar"><i style="width:${N?100*s[1]/N:0}%"></i></div>`).join("");
+$("head").textContent=pc(q,N);
+$("headnote").textContent=`Qualified reviews per invited participant (${q} of ${N}). Quality rate: ${pc(q,sb)} of submissions. Follow-up rate: ${pc(fu,q)} of qualified.`;
+const wc=rows.filter(r=>r.wal=="connected").length,ok=rows.filter(r=>r.ack=="ok").length,fl=rows.filter(r=>r.ack=="failed").length,dc=rows.filter(r=>r.ack=="declined").length;
+const qd=rows.filter((r,i)=>E[i].q&&r.wal=="none").length;
+$("side").innerHTML=[["Wallets connected",`${wc} (${pc(wc,N)} of invited)`],["Acknowledgements recorded",ok],["Acknowledgements failed",fl],["Declined wallet or acknowledgement",dc],["Qualified reviews from participants without a wallet",`${qd} of ${q}`]].map(x=>`<div class="row"><span>${x[0]}</span><b>${x[1]}</b></div>`).join("")+`<div class="note" style="margin-top:8px">A high wallet count with a low qualified count is a vanity result. Compare the two panels, never merge them.</div>`;
+$("cred").textContent=E.reduce((a,e)=>a+e.cr,0);
+$("t").innerHTML="<tr><th>ID</th><th>Read s</th><th>Scroll %</th><th>Words</th><th>Type</th><th>Similarity %</th><th>Rubric</th><th>Wallet</th><th>Ack</th><th>Follow-up</th><th>Stage</th><th>Qualified</th><th>Reason if not</th><th>Credit</th></tr>"+rows.map((r,i)=>{const e=E[i];return`<tr><td>${r.id}</td><td>${r.rs}</td><td>${r.sc}</td><td>${r.w}</td><td>${r.sub?(r.q?"question":"review"):"n/a"}</td><td>${r.sub?r.sim:"n/a"}</td><td>${r.sub?r.rb:"n/a"}</td><td>${r.wal}</td><td class="${r.ack=="failed"?"n":r.ack=="ok"?"y":""}">${r.ack}</td><td>${r.fu?"yes":"no"}</td><td>${e.st}</td><td class="${e.q?"y":"n"}">${e.q?"yes":"no"}</td><td class="w">${e.q?"":e.why}</td><td>${e.cr}</td></tr>`}).join("");}
+document.querySelectorAll("button").forEach(b=>b.onclick=()=>{const s=b.dataset.s;if(s=="reset")rows=JSON.parse(JSON.stringify(BASE));else rows.push({id:"P"+String(rows.length+1).padStart(2,"0"),...SC[s]});render();});
+document.querySelectorAll("input").forEach(i=>i.oninput=render);
+render();
+</script>
+</body>
+</html>
