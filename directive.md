@@ -118,10 +118,12 @@ Claude did not run the prototype in a browser. Only the hand checks above were c
 **What AI produced.** Claude drafted `intent.md`, the participation rules, the prototype, `prd.md`, the experiment brief, the decision memo and this file. The thresholds (90 seconds, 40 words, 80% similarity, rubric pass of 3) and the credit amounts are AI-proposed assumptions that I accepted for testing.
 
 **My decisions**
-- Chose to build the prototype as an interactive page and not a spreadsheet.
-- Chose to put the PRD, backlog and event schema in one file.
-- Accepted reviewer activation as the bottleneck after reviewing the comparison and the sensitivity check.
-- Kept the incentive design wallet-neutral.
+- I chose the interactive page over a spreadsheet, on Claude's recommendation, so the decliner, duplicate and failed-acknowledgement paths can be shown live. I did not build both.
+- I chose one PRD file for the backlog and event schema, so the reviewer finds everything in one place.
+- I accepted reviewer activation as the bottleneck on Claude's scoring. I did not change the scores or the weights.
+- I kept the wallet-neutral incentive design as proposed. I did not change it.
+- I did not change Claude's thresholds or credit amounts. They remain untested assumptions.
+- The four corrections in the table below were found by Claude during review. I checked them and kept them.
 
 **Corrections found during review**
 
