@@ -133,6 +133,7 @@ Evidence for the prototype check (run locally, 23 and 24 Oct 2026):
 - I accepted reviewer activation as the bottleneck on Claude's scoring. I did not change the scores or the weights.
 - I kept the wallet-neutral incentive design as proposed. I did not change it.
 - I did not change Claude's thresholds or credit amounts. They remain untested assumptions.
+- I ran the starting state, the four scenarios and the 120-second test
 - The four corrections in the table below were found by Claude during review. I checked them and kept them.
 
 **Corrections found during review**
