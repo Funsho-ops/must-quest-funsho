@@ -100,18 +100,27 @@ The figures show the method. They are not forecasts.
 
 ## A4. Checks and actual results
 
-| Check | Done by | Result | Status |     
+| Check | Done by | Result | Status |
 |---|---|---|---|
 | Recounted funnel stages from the 12 raw records against the PRD table | Claude, by hand | Matches: 12, 11, 8, 7, 5, 3 | Done |
 | Recomputed credits: P01 20, P02 10, P03 25, P05 10, P11 25 | Claude, by hand | Total 90, matches the page logic | Done |
 | Recomputed sample size and power for 41.7% to 50.0% | Claude | 200 per arm gives about 39% power. About 560 per arm gives 80% | Done, led to correction C1 |
 | Compared the hypothesis in `intent.md` with step conversions in the records | Claude | S2 to S3 loses more than S3 to S4, which contradicts the hypothesis | Done, led to correction C2 |
-| Opened the prototype in a browser and ran all four scenario buttons | Funsho | [record result] | Pending |
-| Screenshot of the page after each scenario | Funsho | [attach to Loom or link] | Pending |
+| Opened the prototype in a browser and compared the starting state with section A3 | Funsho, run locally, 23 Oct 2026 | All figures matched: funnel 12, 11, 8, 7, 5, 3; headline 41.7%; credits 90; wallets 4 of 12; 2 of 5 qualified reviewers without a wallet | Done |
+| Ran the four participant scenarios (wallet user, decliner, duplicate, failed acknowledgement) | Funsho, run locally, 23 Oct 2026 | One click each, in sequence, with no reset between them, so the result is cumulative. Final state: 16 invited, 8 qualified (50.0%), quality rate 72.7%, credits 120, 7 wallets connected, 3 of 8 qualified reviewers without a wallet, acknowledgement credit 0. The figures match a hand calculation for the same sequence | Done, cumulative |
+| Ran the 120-second read threshold test from the 12-record start | Funsho, run locally, 24 Oct 2026 | Matched the expected figures: 5 meaningful reads, 4 qualified (33.3%), credits 80. P04 and P05 no longer reach submission | Done |
+| Screenshots of the page | Funsho | Starting state, cumulative scenario run and 120-second test, linked below the table | Done |
 | Opened every link in A1 while signed out | Funsho | [record result] | Pending |
 | Two-rater rubric check on a sample | Not run. It needs real submissions | Planned for the pilot | Not done |
 
-Claude did not run the prototype in a browser. Only the hand checks above were completed by Claude.
+Claude did not run the prototype in a browser. Funsho ran every check marked above locally. The figures match Claude's hand calculations.
+
+Evidence for the prototype check (run locally, 23 and 24 Oct 2026):
+
+- [Starting state, funnel and headline](Evidence/starting-state-1.png)
+- [Starting state, side metrics and records](Evidence/starting-state-2.png)
+- [Four scenarios run in sequence, cumulative result](Evidence/scenarios-cumulative.png)
+- [Read threshold set to 120 seconds](Evidence/read-threshold-120s.png)
 
 ## A5. AI contribution and corrections
 
@@ -119,7 +128,7 @@ Claude did not run the prototype in a browser. Only the hand checks above were c
 
 **My decisions**
 - I chose the interactive page over a spreadsheet, on Claude's recommendation, so the decliner, duplicate and failed-acknowledgement paths can be shown live. I did not build both.
-- I chose one PRD file for the backlog and event schema, so the reviewer finds everything in one place.
+- I chose one PRD file for the backlog and event schema, on Claude's recommendation, so the reviewer finds everything in one place.
 - I accepted reviewer activation as the bottleneck on Claude's scoring. I did not change the scores or the weights.
 - I kept the wallet-neutral incentive design as proposed. I did not change it.
 - I did not change Claude's thresholds or credit amounts. They remain untested assumptions.
@@ -137,6 +146,7 @@ Claude did not run the prototype in a browser. Only the hand checks above were c
 ## A6. Limitations
 
 - All data is synthetic. The 12 records exercise every path and do not estimate real drop-off.
+- The prototype simulates duplicate detection. Similarity is a stored input, not computed between submissions, so two identical records can both qualify. The real check is task 3 of the backlog.
 - The thresholds and the 20% lift target are assumptions with no supporting data.
 - The pilot is underpowered and gives direction only.
 - The prototype simulates the acknowledgement. It does not call a testnet.
