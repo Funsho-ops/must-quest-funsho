@@ -59,15 +59,16 @@ The work is complete when:
 
 Replace each placeholder with an accessible link, then open every link while signed out.
 
-| Artifact | Link |         
+| Artifact | Link |
 |---|---|
-| Loom video (5 minutes maximum) | [add link] |
-| `intent.md` | [add link] |
-| Journey and participation rules | [add link to `journey-and-participation-rules.md`] |
-| Operating prototype and synthetic dataset | [add shared link to `reviewer-activation-prototype.html`] |
-| PRD, five-item backlog, event schema | [add link to `prd.md`] |
-| Experiment brief | [add link to `experiment-brief.md`] |
-| Decision memo | [add link to `decision-memo.md`] |
+| Loom video (5 minutes maximum) | [add link after recording] |
+| `intent.md` | https://github.com/funsho-ops/must-quest-funsho/blob/main/intent.md |
+| Journey and participation rules | https://github.com/funsho-ops/must-quest-funsho/blob/main/journey-and-participation-rules.md |
+| Operating prototype and synthetic dataset | https://funsho-ops.github.io/must-quest-funsho/reviewer-activation-prototype.html |
+| PRD, five-item backlog, event schema | https://github.com/funsho-ops/must-quest-funsho/blob/main/prd.md |
+| Experiment brief | https://github.com/funsho-ops/must-quest-funsho/blob/main/experiment-brief.md |
+| Decision memo | https://github.com/funsho-ops/must-quest-funsho/blob/main/decision-memo.md |
+| Verification evidence (screenshots) | https://github.com/funsho-ops/must-quest-funsho/tree/main/Evidence |
 
 ## A2. How to view and reproduce
 
