@@ -61,7 +61,7 @@ Replace each placeholder with an accessible link, then open every link while sig
 
 | Artifact | Link |
 |---|---|
-| Loom video (5 minutes maximum) | [add link after recording] |
+| Loom video | https://www.loom.com/share/0d67c230f9034e618aed57f49585a1b8 |
 | `intent.md` | https://github.com/funsho-ops/must-quest-funsho/blob/main/intent.md |
 | Journey and participation rules | https://github.com/funsho-ops/must-quest-funsho/blob/main/journey-and-participation-rules.md |
 | Operating prototype and synthetic dataset | https://funsho-ops.github.io/must-quest-funsho/reviewer-activation-prototype.html |
@@ -111,7 +111,7 @@ The figures show the method. They are not forecasts.
 | Ran the four participant scenarios (wallet user, decliner, duplicate, failed acknowledgement) | Funsho, run locally, 23 Oct 2026 | One click each, in sequence, with no reset between them, so the result is cumulative. Final state: 16 invited, 8 qualified (50.0%), quality rate 72.7%, credits 120, 7 wallets connected, 3 of 8 qualified reviewers without a wallet, acknowledgement credit 0. The figures match a hand calculation for the same sequence | Done, cumulative |
 | Ran the 120-second read threshold test from the 12-record start | Funsho, run locally, 24 Oct 2026 | Matched the expected figures: 5 meaningful reads, 4 qualified (33.3%), credits 80. P04 and P05 no longer reach submission | Done |
 | Screenshots of the page | Funsho | Starting state, cumulative scenario run and 120-second test, linked below the table | Done |
-| Opened every link in A1 while signed out | Funsho | [record result] | Pending |
+| Opened every link in A1 while signed out | Funsho, signed-out private window, 26 Oct 2026 | All links in A1 opened, including the Loom, which played in full with no sign-in. The four evidence screenshots opened from A4 | Done |
 | Two-rater rubric check on a sample | Not run. It needs real submissions | Planned for the pilot | Not done |
 
 Claude did not run the prototype in a browser. Funsho ran every check marked above locally. The figures match Claude's hand calculations.
