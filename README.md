@@ -1,4 +1,4 @@
-# Reviewer activation: Web3 participation loop (Quest submission)
+# Reviewer activation: Participation loop (Quest submission)
 
 Candidate: Akinbile Funsho
 Role: Web3 Product Owner / Crypto Business Ops Manager, MUST Company
